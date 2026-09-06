@@ -1,6 +1,7 @@
 from pyvis.network import Network
 import tempfile
 import os
+import json
 from typing import Dict, Any
 from config import Config
 
@@ -8,9 +9,10 @@ class GraphVisualizer:
     """Renders interactive, zoomable, draggable HTML knowledge graphs using PyVis."""
 
     @classmethod
-    def generate_html(cls, graph_data: Dict[str, Any], height: str = "680px") -> str:
+    def generate_html(cls, graph_data: Dict[str, Any], height: str = "720px") -> str:
         """
-        Convert node and edge dictionary lists into a styled PyVis HTML graph visualization.
+        Convert node and edge dictionary lists into a styled PyVis HTML graph visualization
+        with rich interactive click-to-view definitions and clean formatted tooltips.
         """
         net = Network(
             height=height,
@@ -39,8 +41,8 @@ class GraphVisualizer:
             },
             "shadow": {
               "enabled": true,
-              "color": "rgba(15, 23, 42, 0.06)",
-              "size": 8,
+              "color": "rgba(15, 23, 42, 0.08)",
+              "size": 6,
               "x": 0,
               "y": 2
             }
@@ -70,7 +72,7 @@ class GraphVisualizer:
           },
           "interaction": {
             "hover": true,
-            "tooltipDelay": 120,
+            "tooltipDelay": 100,
             "zoomView": true,
             "dragNodes": true,
             "dragView": true,
@@ -98,6 +100,9 @@ class GraphVisualizer:
         nodes = graph_data.get("nodes", [])
         edges = graph_data.get("edges", [])
 
+        # Build lookup for click inspector overlay
+        nodes_metadata = {}
+
         # Build node elements
         for n in nodes:
             entity_type = (n.get("type") or "CONCEPT").upper()
@@ -105,26 +110,25 @@ class GraphVisualizer:
             
             docs_list = ", ".join(n.get("source_docs", [])) or "None"
             pages_list = ", ".join(n.get("source_pages", [])) or "None"
+            desc = n.get("description", "No description available").strip()
             
-            # Hover tooltip HTML format
-            title_html = f"""
-            <div style="font-family: 'Plus Jakarta Sans', system-ui, sans-serif; max-width: 290px; padding: 8px 10px; font-size: 12px; line-height: 1.45; background: #FFFFFF; border-radius: 8px; border: 1px solid #E2E8F0; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-                    <strong style="color: #0F172A; font-size: 13px;">{n['label']}</strong>
-                    <span style="background: #F3E8FF; color: {color}; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 700; text-transform: uppercase;">{entity_type}</span>
-                </div>
-                <p style="margin: 4px 0 8px 0; color: #475569; font-size: 12px;">{n.get('description', '')}</p>
-                <div style="border-top: 1px solid #F1F5F9; padding-top: 6px; color: #64748B; font-size: 11px;">
-                    <div><strong>Document:</strong> {docs_list}</div>
-                    <div style="margin-top: 2px;"><strong>Citations:</strong> {pages_list}</div>
-                </div>
-            </div>
-            """
+            # Clean plain-text tooltip (No raw HTML tags shown)
+            clean_tooltip = f"{n['label']} [{entity_type}]\n\n📖 Definition:\n{desc}\n\n📄 Sources: {docs_list}\n📍 Citations: {pages_list}\n(Click node to view full details)"
+
+            # Save detailed metadata for JavaScript click handler
+            nodes_metadata[n["id"]] = {
+                "label": n["label"],
+                "type": entity_type,
+                "color": color,
+                "description": desc,
+                "docs": docs_list,
+                "pages": pages_list
+            }
 
             net.add_node(
                 n["id"],
                 label=f"<b>{n['label']}</b>",
-                title=title_html,
+                title=clean_tooltip,
                 color={
                     "background": "#FFFFFF",
                     "border": color,
@@ -160,5 +164,141 @@ class GraphVisualizer:
         # Clean up temp file
         if os.path.exists(path):
             os.remove(path)
+
+        # Inject interactive click overlay modal inside the network canvas
+        metadata_json = json.dumps(nodes_metadata)
+        
+        custom_script = f"""
+        <!-- Interactive Concept Card Overlay on Node Click -->
+        <style>
+            #concept-card-overlay {{
+                position: absolute;
+                top: 14px;
+                right: 14px;
+                width: 320px;
+                max-width: 90%;
+                max-height: 85%;
+                overflow-y: auto;
+                background: #FFFFFF;
+                border: 1px solid #E2E8F0;
+                border-left: 4px solid #7C3AED;
+                border-radius: 12px;
+                padding: 16px 18px;
+                box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.1), 0 4px 6px -2px rgba(15, 23, 42, 0.05);
+                font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+                z-index: 9999;
+                display: none;
+                transition: opacity 0.2s ease;
+            }}
+            #concept-card-overlay .card-header {{
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                margin-bottom: 8px;
+            }}
+            #concept-card-overlay .card-title {{
+                font-size: 16px;
+                font-weight: 700;
+                color: #0F172A;
+                line-height: 1.3;
+                margin: 0;
+            }}
+            #concept-card-overlay .card-type {{
+                font-size: 10px;
+                font-weight: 700;
+                padding: 3px 7px;
+                border-radius: 4px;
+                text-transform: uppercase;
+                letter-spacing: 0.4px;
+                background: #F3E8FF;
+                color: #7C3AED;
+                margin-left: 6px;
+                white-space: nowrap;
+            }}
+            #concept-card-overlay .card-desc {{
+                font-size: 12.5px;
+                line-height: 1.55;
+                color: #334155;
+                background: #F8FAFC;
+                border: 1px solid #E2E8F0;
+                border-radius: 8px;
+                padding: 10px 12px;
+                margin: 10px 0;
+            }}
+            #concept-card-overlay .card-meta {{
+                font-size: 11.5px;
+                color: #64748B;
+                border-top: 1px solid #F1F5F9;
+                padding-top: 8px;
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }}
+            #concept-card-overlay .card-meta strong {{
+                color: #0F172A;
+            }}
+            #concept-card-overlay .close-btn {{
+                background: transparent;
+                border: none;
+                color: #94A3B8;
+                font-size: 16px;
+                font-weight: 700;
+                cursor: pointer;
+                padding: 0 4px;
+                line-height: 1;
+            }}
+            #concept-card-overlay .close-btn:hover {{
+                color: #0F172A;
+            }}
+        </style>
+
+        <div id="concept-card-overlay">
+            <div class="card-header">
+                <div>
+                    <h4 class="card-title" id="card-node-title">Concept Name</h4>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <span class="card-type" id="card-node-type">CONCEPT</span>
+                    <button class="close-btn" onclick="document.getElementById('concept-card-overlay').style.display='none';">&times;</button>
+                </div>
+            </div>
+            <div class="card-desc" id="card-node-desc">
+                Definition from document will appear here.
+            </div>
+            <div class="card-meta">
+                <div><strong>📄 Document:</strong> <span id="card-node-doc">-</span></div>
+                <div><strong>📍 Citation:</strong> <span id="card-node-cite">-</span></div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            const nodeMetaStore = {metadata_json};
+            
+            if (typeof network !== 'undefined') {{
+                network.on("click", function (params) {{
+                    const overlay = document.getElementById("concept-card-overlay");
+                    if (params.nodes.length > 0) {{
+                        const nodeId = params.nodes[0];
+                        const meta = nodeMetaStore[nodeId];
+                        if (meta) {{
+                            document.getElementById("card-node-title").innerText = meta.label;
+                            document.getElementById("card-node-type").innerText = meta.type;
+                            document.getElementById("card-node-type").style.color = meta.color || '#7C3AED';
+                            document.getElementById("card-node-desc").innerText = meta.description || 'No description stored.';
+                            document.getElementById("card-node-doc").innerText = meta.docs || 'Unknown';
+                            document.getElementById("card-node-cite").innerText = meta.pages || 'N/A';
+                            overlay.style.display = "block";
+                        }}
+                    }}
+                }});
+            }}
+        </script>
+        """
+
+        # Append script before closing body
+        if "</body>" in html_content:
+            html_content = html_content.replace("</body>", f"{custom_script}</body>")
+        else:
+            html_content += custom_script
 
         return html_content
