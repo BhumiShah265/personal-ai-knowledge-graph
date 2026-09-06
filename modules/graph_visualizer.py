@@ -8,7 +8,7 @@ class GraphVisualizer:
     """Renders interactive, zoomable, draggable HTML knowledge graphs using PyVis."""
 
     @classmethod
-    def generate_html(cls, graph_data: Dict[str, Any], height: str = "650px") -> str:
+    def generate_html(cls, graph_data: Dict[str, Any], height: str = "680px") -> str:
         """
         Convert node and edge dictionary lists into a styled PyVis HTML graph visualization.
         """
@@ -16,7 +16,7 @@ class GraphVisualizer:
             height=height,
             width="100%",
             directed=True,
-            bgcolor="#FAF8F5",
+            bgcolor="#F9F9FB",
             font_color="#0F172A"
         )
 
@@ -24,55 +24,73 @@ class GraphVisualizer:
         {
           "nodes": {
             "font": {
-              "size": 14,
-              "face": "Inter, system-ui, sans-serif",
-              "multi": "html"
+              "size": 13,
+              "face": "Plus Jakarta Sans, Inter, system-ui, sans-serif",
+              "color": "#0F172A",
+              "multi": "html",
+              "bold": {
+                "color": "#0F172A"
+              }
             },
             "borderWidth": 2,
+            "borderWidthSelected": 3,
+            "shapeProperties": {
+              "borderRadius": 8
+            },
             "shadow": {
               "enabled": true,
-              "color": "rgba(0,0,0,0.08)",
-              "size": 6
+              "color": "rgba(15, 23, 42, 0.06)",
+              "size": 8,
+              "x": 0,
+              "y": 2
             }
           },
           "edges": {
             "color": {
-              "color": "#94A3B8",
-              "highlight": "#4F46E5",
-              "hover": "#4F46E5"
+              "color": "#CBD5E1",
+              "highlight": "#7C3AED",
+              "hover": "#7C3AED"
             },
             "font": {
               "size": 11,
               "align": "middle",
-              "face": "Inter, system-ui, sans-serif"
+              "face": "Plus Jakarta Sans, Inter, system-ui, sans-serif",
+              "color": "#64748B",
+              "strokeWidth": 2,
+              "strokeColor": "#F9F9FB"
             },
             "arrows": {
-              "to": { "enabled": true, "scaleFactor": 0.6 }
+              "to": { "enabled": true, "scaleFactor": 0.5 }
             },
             "smooth": {
-              "type": "continuous",
+              "type": "cubicBezier",
+              "forceDirection": "none",
               "roundness": 0.2
             }
           },
           "interaction": {
             "hover": true,
-            "tooltipDelay": 100,
+            "tooltipDelay": 120,
             "zoomView": true,
             "dragNodes": true,
             "dragView": true,
-            "navigationButtons": true
+            "navigationButtons": true,
+            "keyboard": {
+              "enabled": false
+            }
           },
           "physics": {
             "solver": "forceAtlas2Based",
             "forceAtlas2Based": {
-              "gravitationalConstant": -50,
-              "centralGravity": 0.01,
-              "springLength": 100,
-              "springConstant": 0.08
+              "gravitationalConstant": -40,
+              "centralGravity": 0.008,
+              "springLength": 110,
+              "springConstant": 0.08,
+              "damping": 0.6
             },
-            "maxVelocity": 50,
+            "maxVelocity": 45,
             "minVelocity": 0.1,
-            "stabilization": { "iterations": 150 }
+            "stabilization": { "iterations": 180 }
           }
         }
         """)
@@ -90,30 +108,31 @@ class GraphVisualizer:
             
             # Hover tooltip HTML format
             title_html = f"""
-            <div style="font-family: system-ui; max-width: 280px; padding: 6px; font-size: 13px; line-height: 1.4;">
-                <strong style="color: {color}; font-size: 14px;">{n['label']}</strong> 
-                <span style="background: #EEF2FF; color: #4338CA; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">{entity_type}</span>
-                <p style="margin: 6px 0; color: #334155;">{n.get('description', '')}</p>
-                <hr style="border: none; border-top: 1px solid #E2E8F0; margin: 4px 0;">
-                <div style="color: #64748B; font-size: 11px;">
-                    <strong>Sources:</strong> {docs_list}<br>
-                    <strong>Citations:</strong> {pages_list}
+            <div style="font-family: 'Plus Jakarta Sans', system-ui, sans-serif; max-width: 290px; padding: 8px 10px; font-size: 12px; line-height: 1.45; background: #FFFFFF; border-radius: 8px; border: 1px solid #E2E8F0; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                    <strong style="color: #0F172A; font-size: 13px;">{n['label']}</strong>
+                    <span style="background: #F3E8FF; color: {color}; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 700; text-transform: uppercase;">{entity_type}</span>
+                </div>
+                <p style="margin: 4px 0 8px 0; color: #475569; font-size: 12px;">{n.get('description', '')}</p>
+                <div style="border-top: 1px solid #F1F5F9; padding-top: 6px; color: #64748B; font-size: 11px;">
+                    <div><strong>Document:</strong> {docs_list}</div>
+                    <div style="margin-top: 2px;"><strong>Citations:</strong> {pages_list}</div>
                 </div>
             </div>
             """
 
             net.add_node(
                 n["id"],
-                label=n["label"],
+                label=f"<b>{n['label']}</b>",
                 title=title_html,
                 color={
                     "background": "#FFFFFF",
                     "border": color,
-                    "highlight": {"background": color, "border": color},
-                    "hover": {"background": "#F1F5F9", "border": color}
+                    "highlight": {"background": "#F3E8FF", "border": color},
+                    "hover": {"background": "#F8FAFC", "border": color}
                 },
                 shape="box",
-                margin=10,
+                margin=9,
                 group=entity_type
             )
 
