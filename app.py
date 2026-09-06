@@ -9,7 +9,7 @@ from modules.doc_manager import DocumentManager
 from modules.graph_visualizer import GraphVisualizer
 from modules.qa_engine import QAEngine
 
-# Streamlit Page Config
+# Streamlit Page Configuration
 st.set_page_config(
     page_title="Personal AI Knowledge Graph",
     page_icon="🧠",
@@ -17,7 +17,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for Premium Research-Oriented Knowledge Workspace
+# Custom Styling: Warm off-white, purple accent, clean typography, spacious layout
 STYLING_CSS = """
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -39,8 +39,8 @@ STYLING_CSS = """
         align-items: center;
         background: #FFFFFF;
         border: 1px solid #E5E7EB;
-        border-radius: 14px;
-        padding: 18px 24px;
+        border-radius: 12px;
+        padding: 16px 22px;
         margin-bottom: 20px;
         box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
     }
@@ -52,13 +52,13 @@ STYLING_CSS = """
     }
 
     .top-header-title {
-        font-size: 22px;
+        font-size: 20px;
         font-weight: 700;
         color: #0F172A;
         letter-spacing: -0.4px;
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
     }
 
     .top-header-subtitle {
@@ -107,15 +107,15 @@ STYLING_CSS = """
     .metric-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 16px;
-        margin-bottom: 24px;
+        gap: 14px;
+        margin-bottom: 22px;
     }
 
     .metric-tile {
         background: #FFFFFF;
         border: 1px solid #E5E7EB;
-        border-radius: 12px;
-        padding: 16px 20px;
+        border-radius: 10px;
+        padding: 14px 18px;
         box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
         transition: border-color 0.15s ease;
     }
@@ -128,20 +128,20 @@ STYLING_CSS = """
         font-size: 11px;
         font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 0.6px;
+        letter-spacing: 0.5px;
         color: #64748B;
-        margin-bottom: 6px;
+        margin-bottom: 4px;
     }
 
     .metric-tile-value {
-        font-size: 26px;
+        font-size: 24px;
         font-weight: 700;
         color: #0F172A;
-        letter-spacing: -0.5px;
+        letter-spacing: -0.4px;
     }
 
     .metric-tile-sub {
-        font-size: 12px;
+        font-size: 11px;
         color: #94A3B8;
         margin-top: 2px;
     }
@@ -150,14 +150,14 @@ STYLING_CSS = """
     .workspace-card {
         background: #FFFFFF;
         border: 1px solid #E5E7EB;
-        border-radius: 14px;
-        padding: 24px;
-        margin-bottom: 20px;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 18px;
         box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
     }
 
     .workspace-card-title {
-        font-size: 17px;
+        font-size: 16px;
         font-weight: 700;
         color: #0F172A;
         letter-spacing: -0.3px;
@@ -167,38 +167,38 @@ STYLING_CSS = """
     .workspace-card-desc {
         font-size: 13px;
         color: #64748B;
-        margin-bottom: 16px;
+        margin-bottom: 14px;
     }
 
     /* Graph Legend Chips */
     .legend-bar {
         display: flex;
         flex-wrap: wrap;
-        gap: 8px;
+        gap: 6px;
         align-items: center;
-        padding: 10px 14px;
+        padding: 8px 12px;
         background: #F8FAFC;
         border: 1px solid #E2E8F0;
-        border-radius: 10px;
-        margin-bottom: 14px;
+        border-radius: 8px;
+        margin-bottom: 12px;
     }
 
     .legend-chip {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
+        gap: 5px;
         font-size: 11px;
         font-weight: 600;
         color: #334155;
-        padding: 3px 8px;
+        padding: 2px 7px;
         background: #FFFFFF;
         border: 1px solid #E2E8F0;
-        border-radius: 6px;
+        border-radius: 5px;
     }
 
     .legend-dot {
-        width: 8px;
-        height: 8px;
+        width: 7px;
+        height: 7px;
         border-radius: 50%;
     }
 
@@ -206,16 +206,16 @@ STYLING_CSS = """
     .inspector-card {
         background: #FFFFFF;
         border: 1px solid #E5E7EB;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+        border-radius: 10px;
+        padding: 16px;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
     }
 
     .concept-title {
-        font-size: 18px;
+        font-size: 17px;
         font-weight: 700;
         color: #0F172A;
-        margin-bottom: 8px;
+        margin-bottom: 6px;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -225,23 +225,23 @@ STYLING_CSS = """
         display: inline-block;
         background: #F3E8FF;
         color: #7C3AED;
-        font-size: 11px;
+        font-size: 10px;
         font-weight: 700;
-        padding: 3px 8px;
-        border-radius: 6px;
+        padding: 2px 7px;
+        border-radius: 5px;
         text-transform: uppercase;
         letter-spacing: 0.3px;
     }
 
     .concept-desc {
         font-size: 13px;
-        line-height: 1.55;
+        line-height: 1.5;
         color: #334155;
         background: #F8FAFC;
         border: 1px solid #E2E8F0;
-        border-radius: 8px;
-        padding: 12px;
-        margin: 12px 0;
+        border-radius: 6px;
+        padding: 10px;
+        margin: 10px 0;
     }
 
     .citation-tag {
@@ -251,11 +251,11 @@ STYLING_CSS = """
         color: #475569;
         font-size: 11px;
         font-weight: 600;
-        padding: 4px 8px;
-        border-radius: 6px;
+        padding: 3px 7px;
+        border-radius: 5px;
         border: 1px solid #CBD5E1;
-        margin-right: 6px;
-        margin-bottom: 6px;
+        margin-right: 5px;
+        margin-bottom: 5px;
     }
 
     .rel-item {
@@ -264,10 +264,10 @@ STYLING_CSS = """
         gap: 6px;
         font-size: 12px;
         color: #334155;
-        padding: 5px 8px;
+        padding: 4px 7px;
         background: #F8FAFC;
-        border-radius: 6px;
-        margin-bottom: 5px;
+        border-radius: 5px;
+        margin-bottom: 4px;
         border: 1px solid #F1F5F9;
     }
 
@@ -276,7 +276,7 @@ STYLING_CSS = """
         font-weight: 700;
         color: #7C3AED;
         background: #F3E8FF;
-        padding: 2px 6px;
+        padding: 2px 5px;
         border-radius: 4px;
         text-transform: uppercase;
     }
@@ -288,9 +288,9 @@ STYLING_CSS = """
         justify-content: space-between;
         background: #FFFFFF;
         border: 1px solid #E5E7EB;
-        border-radius: 10px;
-        padding: 14px 18px;
-        margin-bottom: 10px;
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin-bottom: 8px;
         transition: border-color 0.15s ease;
     }
 
@@ -305,20 +305,20 @@ STYLING_CSS = """
     }
 
     .doc-icon {
-        width: 36px;
-        height: 36px;
-        border-radius: 8px;
+        width: 34px;
+        height: 34px;
+        border-radius: 6px;
         background: #F3E8FF;
         color: #7C3AED;
         display: flex;
         align-items: center;
         justify-content: center;
         font-weight: 700;
-        font-size: 14px;
+        font-size: 12px;
     }
 
     .doc-name {
-        font-size: 14px;
+        font-size: 13.5px;
         font-weight: 600;
         color: #0F172A;
     }
@@ -329,74 +329,92 @@ STYLING_CSS = """
         margin-top: 2px;
     }
 
+    .doc-status-badge {
+        display: inline-block;
+        background: #F0FDF4;
+        color: #15803D;
+        border: 1px solid #BBF7D0;
+        font-size: 10.5px;
+        font-weight: 600;
+        padding: 1px 6px;
+        border-radius: 4px;
+        margin-left: 6px;
+    }
+
     /* Grounded Q&A Assistant Styles */
     .qa-banner {
         background: #FAF5FF;
         border: 1px solid #E9D5FF;
-        border-radius: 10px;
-        padding: 12px 16px;
-        font-size: 13px;
+        border-radius: 8px;
+        padding: 10px 14px;
+        font-size: 12.5px;
         color: #6B21A8;
         display: flex;
         align-items: center;
         gap: 8px;
-        margin-bottom: 16px;
+        margin-bottom: 14px;
     }
 
     .qa-answer-card {
         background: #FFFFFF;
         border: 1px solid #E5E7EB;
         border-left: 4px solid #7C3AED;
-        border-radius: 10px;
-        padding: 18px 20px;
-        margin: 14px 0;
-        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+        border-radius: 8px;
+        padding: 16px 18px;
+        margin: 12px 0;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
     }
 
     .qa-answer-text {
-        font-size: 14px;
-        line-height: 1.65;
+        font-size: 13.5px;
+        line-height: 1.6;
         color: #0F172A;
+    }
+
+    .citation-box {
+        margin-top: 10px;
+        padding-top: 8px;
+        border-top: 1px solid #F1F5F9;
     }
 
     /* Empty States */
     .empty-state {
         text-align: center;
-        padding: 48px 24px;
+        padding: 40px 20px;
         background: #FFFFFF;
         border: 1px dashed #CBD5E1;
-        border-radius: 14px;
-        margin: 20px 0;
+        border-radius: 12px;
+        margin: 16px 0;
     }
 
     .empty-state-title {
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 700;
         color: #1E293B;
-        margin: 12px 0 6px 0;
+        margin: 10px 0 4px 0;
     }
 
     .empty-state-desc {
-        font-size: 13px;
+        font-size: 12.5px;
         color: #64748B;
-        max-width: 420px;
+        max-width: 400px;
         margin: 0 auto;
     }
 
     /* Tab Styling with Purple Accent */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 10px;
+        gap: 8px;
         border-bottom: 1px solid #E5E7EB;
-        padding-bottom: 4px;
-        margin-bottom: 20px;
+        padding-bottom: 2px;
+        margin-bottom: 18px;
     }
 
     .stTabs [data-baseweb="tab"] {
-        height: 44px;
-        border-radius: 8px;
-        padding: 0 18px;
+        height: 42px;
+        border-radius: 6px;
+        padding: 0 16px;
         font-weight: 600;
-        font-size: 14px;
+        font-size: 13.5px;
         color: #64748B;
         background-color: transparent;
         border: none;
@@ -409,10 +427,10 @@ STYLING_CSS = """
 
     /* Button Customization */
     .stButton>button {
-        border-radius: 8px;
+        border-radius: 6px;
         font-weight: 600;
         font-size: 13px;
-        padding: 6px 16px;
+        padding: 5px 14px;
         transition: all 0.15s ease;
     }
 
@@ -444,6 +462,8 @@ if "api_key" not in st.session_state:
     st.session_state.api_key = Config.GROK_API_KEY or Config.OPENAI_API_KEY
 if "model_choice" not in st.session_state:
     st.session_state.model_choice = Config.LLM_MODEL
+if "file_cache" not in st.session_state:
+    st.session_state.file_cache = {}
 
 # Initialize Database Connector
 db = GraphDatabaseConnector()
@@ -524,16 +544,17 @@ with st.sidebar:
             '<div class="status-pill disconnected"><span class="status-dot disconnected"></span>Neo4j Offline</div>',
             unsafe_allow_html=True
         )
-        with st.expander("Connection Settings", expanded=True):
-            neo_uri = st.text_input("Bolt URI", value=Config.NEO4J_URI)
-            neo_user = st.text_input("Username", value=Config.NEO4J_USERNAME)
-            neo_pass = st.text_input("Password", value=Config.NEO4J_PASSWORD, type="password")
-            if st.button("Reconnect Database", use_container_width=True):
-                db.uri = neo_uri
-                db.username = neo_user
-                db.password = neo_pass
-                test_and_connect_db()
-                st.rerun()
+    
+    with st.expander("Connection Settings", expanded=not st.session_state.db_connected):
+        neo_uri = st.text_input("Bolt URI", value=Config.NEO4J_URI)
+        neo_user = st.text_input("Username", value=Config.NEO4J_USERNAME)
+        neo_pass = st.text_input("Password", value=Config.NEO4J_PASSWORD, type="password")
+        if st.button("Reconnect Database", use_container_width=True):
+            db.uri = neo_uri
+            db.username = neo_user
+            db.password = neo_pass
+            test_and_connect_db()
+            st.rerun()
 
     st.markdown("---")
     st.markdown("**Quick Actions**")
@@ -549,6 +570,7 @@ with st.sidebar:
                     if os.path.exists(sample_txt_path):
                         with open(sample_txt_path, "rb") as f:
                             content = f.read()
+                        st.session_state.file_cache["sample_ai_notes.txt"] = content
                         res = DocumentManager.process_document(
                             file_name="sample_ai_notes.txt",
                             file_bytes=content,
@@ -569,13 +591,16 @@ with st.sidebar:
         if st.button("Reset Knowledge Graph", type="primary", disabled=not confirm_check, use_container_width=True):
             if st.session_state.db_connected:
                 db.reset_graph()
+                st.session_state.file_cache = {}
+                st.session_state.chat_history = []
                 st.success("Knowledge graph reset successfully.")
+                time.sleep(0.8)
                 st.rerun()
 
 # ----------------------------------------------------
 # 1. TOP HEADER BAR
 # ----------------------------------------------------
-db_pill_html = '<div class="status-pill connected"><span class="status-dot connected"></span>Neo4j Active (bolt://localhost:7687)</div>' if st.session_state.db_connected else '<div class="status-pill disconnected"><span class="status-dot disconnected"></span>Neo4j Disconnected</div>'
+db_pill_html = '<div class="status-pill connected" title="Connected to Neo4j Database"><span class="status-dot connected"></span>Neo4j Connected</div>' if st.session_state.db_connected else '<div class="status-pill disconnected" title="Neo4j is not reachable"><span class="status-dot disconnected"></span>Neo4j Offline</div>'
 
 st.markdown(f"""
 <div class="top-header">
@@ -583,7 +608,7 @@ st.markdown(f"""
         <div class="top-header-title">
             <span>Personal AI Knowledge Graph</span>
         </div>
-        <div class="top-header-subtitle">Explore interconnected domain concepts, provenance, and grounded insights across your notes.</div>
+        <div class="top-header-subtitle">Explore connections across your documents</div>
     </div>
     <div>
         {db_pill_html}
@@ -632,32 +657,36 @@ st.markdown(f"""
 # ----------------------------------------------------
 tab_explorer, tab_ingest, tab_qa = st.tabs([
     "🔍 Graph Explorer", 
-    "📁 Document Management & Ingestion", 
-    "💬 Grounded Q&A Assistant"
+    "📁 Document Management", 
+    "💬 Grounded Q&A"
 ])
 
 # ----------------------------------------------------
-# TAB 1: MAIN GRAPH EXPLORER
+# TAB 1: MAIN GRAPH EXPLORER (PRIORITY 1)
 # ----------------------------------------------------
 with tab_explorer:
     if not st.session_state.db_connected:
         st.markdown("""
         <div class="empty-state">
-            <div style="font-size: 32px;">🔌</div>
+            <div style="font-size: 30px;">🔌</div>
             <div class="empty-state-title">Neo4j Database Offline</div>
-            <div class="empty-state-desc">Please ensure your Neo4j database service is running and configure connection credentials in the sidebar.</div>
+            <div class="empty-state-desc">Please ensure your Neo4j service is running and configure connection settings in the sidebar.</div>
         </div>
         """, unsafe_allow_html=True)
     else:
         # Search & Filter Controls Bar
         col_s1, col_s2, col_s3 = st.columns([2.5, 1.2, 1])
         with col_s1:
-            search_query = st.text_input("Search Concepts or Keywords", placeholder="Filter graph by keyword, e.g. Neural Networks, Optimizer, Robotics...", label_visibility="collapsed")
+            search_query = st.text_input(
+                "Search Concepts or Keywords", 
+                placeholder="Search concepts, methods, entities...", 
+                label_visibility="collapsed"
+            )
         with col_s2:
             all_types = db.get_all_entity_types()
-            selected_type = st.selectbox("Entity Type", all_types, label_visibility="collapsed")
+            selected_type = st.selectbox("Entity Type Filter", all_types, label_visibility="collapsed")
         with col_s3:
-            max_nodes = st.slider("Display Limit", min_value=20, max_value=400, value=150, step=10, label_visibility="collapsed")
+            max_nodes = st.slider("Display Limit", min_value=20, max_value=500, value=200, step=10, label_visibility="collapsed")
 
         # Entity Type Color Legend
         legend_chips_html = "".join([
@@ -672,22 +701,23 @@ with tab_explorer:
         if not graph_data["nodes"]:
             st.markdown("""
             <div class="empty-state">
-                <div style="font-size: 36px;">🕸️</div>
+                <div style="font-size: 34px;">🕸️</div>
                 <div class="empty-state-title">No Knowledge Graph Data Found</div>
-                <div class="empty-state-desc">Upload documents in the <strong>Document Management</strong> tab or click <strong>Load Sample Study Notes</strong> in the sidebar to build your graph.</div>
+                <div class="empty-state-desc">Upload documents in <strong>Document Management</strong> or click <strong>Load Sample Study Notes</strong> in the sidebar to build your interactive graph.</div>
             </div>
             """, unsafe_allow_html=True)
         else:
-            col_graph, col_inspector = st.columns([2.6, 1.4])
+            # Main Dominant Graph Layout (70% Graph Canvas, 30% Inspector)
+            col_graph, col_inspector = st.columns([2.8, 1.2])
             
             with col_graph:
-                st.caption("Interactive Canvas: Drag nodes to rearrange, scroll to zoom, hover for citations.")
-                html_code = GraphVisualizer.generate_html(graph_data, height="680px")
-                components.html(html_code, height=700, scrolling=False)
+                st.caption(f"Showing **{len(graph_data['nodes'])}** nodes & **{len(graph_data['edges'])}** relationships. Drag to reposition, scroll to zoom.")
+                html_code = GraphVisualizer.generate_html(graph_data, height="720px")
+                components.html(html_code, height=740, scrolling=False)
 
             with col_inspector:
                 st.markdown('<div class="workspace-card-title">Concept Inspector</div>', unsafe_allow_html=True)
-                st.caption("Select a concept from the knowledge base to inspect its citations, properties, and relationships.")
+                st.caption("Select a concept to inspect its description, provenance, and relationships.")
                 
                 node_labels = [n["label"] for n in graph_data["nodes"]]
                 norm_lookup = {n["label"]: n["id"] for n in graph_data["nodes"]}
@@ -724,7 +754,7 @@ with tab_explorer:
                         st.markdown(cites_html, unsafe_allow_html=True)
                         
                         st.markdown("<br>", unsafe_allow_html=True)
-                        st.markdown("**🔗 Connected Knowledge**")
+                        st.markdown("**🔗 Connected Concepts**")
                         if details['outgoing_relationships']:
                             for rel in details['outgoing_relationships']:
                                 st.markdown(f"""
@@ -744,16 +774,16 @@ with tab_explorer:
                                 </div>
                                 """, unsafe_allow_html=True)
                 else:
-                    st.info("💡 Tip: Select any concept from the dropdown above to view complete provenance, connected concepts, and source citations.")
+                    st.info("💡 Select any concept from the dropdown above to view complete provenance, connected concepts, and source citations.")
 
 # ----------------------------------------------------
-# TAB 2: DOCUMENT MANAGEMENT & INGESTION
+# TAB 2: DOCUMENT MANAGEMENT (PRIORITY 2)
 # ----------------------------------------------------
 with tab_ingest:
-    col_up1, col_up2 = st.columns([1.5, 1])
+    col_up1, col_up2 = st.columns([1.6, 1])
     
     with col_up1:
-        st.markdown('<div class="workspace-card-title">Upload Documents</div>', unsafe_allow_html=True)
+        st.markdown('<div class="workspace-card-title">Upload Notes & Documents</div>', unsafe_allow_html=True)
         st.caption("Upload PDF or TXT study notes to automatically extract entities, build relationships, and merge concepts.")
         
         uploaded_files = st.file_uploader(
@@ -778,6 +808,9 @@ with tab_ingest:
                         status_banner.info(f"Extracting concepts from '{file.name}' using **{st.session_state.model_choice}**...")
                         try:
                             file_bytes = file.read()
+                            # Store in session file cache for instant reprocess
+                            st.session_state.file_cache[file.name] = file_bytes
+                            
                             result = DocumentManager.process_document(
                                 file_name=file.name,
                                 file_bytes=file_bytes,
@@ -799,12 +832,12 @@ with tab_ingest:
                     st.rerun()
 
     with col_up2:
-        st.markdown('<div class="workspace-card-title">Supported Formats & Pipeline</div>', unsafe_allow_html=True)
+        st.markdown('<div class="workspace-card-title">Processing Pipeline</div>', unsafe_allow_html=True)
         st.markdown("""
-        - **PDF Documents** (`.pdf`): PyMuPDF multi-page extraction with page tracking.
-        - **Text Notes** (`.txt`): UTF-8 structured text processing.
-        - **Deduplication Engine**: Automatic concept normalization & alias resolution.
-        - **Source Attribution**: Retains exact document and page references for every node.
+        - **PDF Documents** (`.pdf`): PyMuPDF multi-page parsing with page-level tracking.
+        - **Text Notes** (`.txt`): Structured UTF-8 text extraction.
+        - **Concept Deduplication**: Merges new document entities with existing nodes.
+        - **Provenance Retention**: Keeps exact document and page references.
         """)
 
     st.markdown("---")
@@ -817,13 +850,14 @@ with tab_ingest:
             for d in docs:
                 col_info, col_acts = st.columns([3, 1.2])
                 with col_info:
+                    doc_ext = "PDF" if d['doc_name'].endswith('.pdf') else "TXT"
                     st.markdown(f"""
                     <div class="doc-row">
                         <div class="doc-info">
-                            <div class="doc-icon">{'PDF' if d['doc_name'].endswith('.pdf') else 'TXT'}</div>
+                            <div class="doc-icon">{doc_ext}</div>
                             <div>
-                                <div class="doc-name">{d['doc_name']}</div>
-                                <div class="doc-meta">Pages: <strong>{d['page_count']}</strong> &nbsp;|&nbsp; Extracted Concepts: <strong>{d['concept_count']}</strong> &nbsp;|&nbsp; Added: {d['created_at'][:10]}</div>
+                                <div class="doc-name">{d['doc_name']} <span class="doc-status-badge">Indexed</span></div>
+                                <div class="doc-meta">Pages: <strong>{d['page_count']}</strong> &nbsp;|&nbsp; Concepts: <strong>{d['concept_count']}</strong> &nbsp;|&nbsp; Added: {d['created_at'][:10]}</div>
                             </div>
                         </div>
                     </div>
@@ -831,11 +865,41 @@ with tab_ingest:
                 with col_acts:
                     col_b1, col_b2 = st.columns(2)
                     with col_b1:
+                        # Real Reprocessing Action
                         if st.button("🔄 Reprocess", key=f"reproc_{d['doc_name']}", use_container_width=True):
-                            st.info(f"To reprocess, re-upload '{d['doc_name']}' above.")
+                            doc_bytes = st.session_state.file_cache.get(d['doc_name'])
+                            
+                            # Fallback check for sample file
+                            if not doc_bytes and d['doc_name'] == "sample_ai_notes.txt":
+                                sample_path = os.path.join(os.path.dirname(__file__), "sample_data", "sample_ai_notes.txt")
+                                if os.path.exists(sample_path):
+                                    with open(sample_path, "rb") as sf:
+                                        doc_bytes = sf.read()
+                            
+                            if doc_bytes:
+                                if not st.session_state.api_key:
+                                    st.error("Please enter an API Key in sidebar first.")
+                                else:
+                                    with st.spinner(f"Reprocessing '{d['doc_name']}'..."):
+                                        res = DocumentManager.process_document(
+                                            file_name=d['doc_name'],
+                                            file_bytes=doc_bytes,
+                                            db=db,
+                                            api_key=st.session_state.api_key,
+                                            model_name=st.session_state.model_choice,
+                                            force_reprocess=True
+                                        )
+                                        st.success(f"Reprocessed '{d['doc_name']}'! Extracted {res['concepts_extracted']} concepts.")
+                                        time.sleep(1)
+                                        st.rerun()
+                            else:
+                                st.warning(f"Please re-upload '{d['doc_name']}' above to reprocess.")
+                    
                     with col_b2:
                         if st.button("🗑️ Delete", key=f"del_{d['doc_name']}", use_container_width=True):
                             db.delete_document(d['doc_name'])
+                            if d['doc_name'] in st.session_state.file_cache:
+                                del st.session_state.file_cache[d['doc_name']]
                             st.success(f"Deleted '{d['doc_name']}' and its exclusive graph nodes.")
                             time.sleep(0.8)
                             st.rerun()
@@ -843,38 +907,58 @@ with tab_ingest:
             st.info("No documents currently stored in the knowledge graph. Upload documents above to begin.")
 
 # ----------------------------------------------------
-# TAB 3: GROUNDED QUESTION ANSWERING ASSISTANT
+# TAB 3: GROUNDED Q&A (PRIORITY 3)
 # ----------------------------------------------------
 with tab_qa:
-    st.markdown("""
-    <div class="qa-banner">
-        <span>🛡️</span>
-        <span><strong>Grounded GraphRAG Engine:</strong> Responses are synthesized strictly from connected graph concepts and verifiable document source text.</span>
-    </div>
-    """, unsafe_allow_html=True)
+    col_qa_head, col_qa_reset = st.columns([3, 1])
+    with col_qa_head:
+        st.markdown("""
+        <div class="qa-banner">
+            <span>🛡️</span>
+            <span><strong>Grounded GraphRAG Engine:</strong> Responses are synthesized strictly from connected graph concepts and verifiable document source text.</span>
+        </div>
+        """, unsafe_allow_html=True)
+    with col_qa_reset:
+        if st.session_state.chat_history:
+            if st.button("🗑️ Clear Conversation", use_container_width=True):
+                st.session_state.chat_history = []
+                st.rerun()
 
     # Preset Sample Questions Bar
     st.markdown("**Suggested Research Questions:**")
     preset_cols = st.columns(3)
     preset_q = None
     with preset_cols[0]:
-        if st.button("What concepts are connected to Machine Learning?", use_container_width=True):
+        if st.button("What concepts connect to Machine Learning?", use_container_width=True):
             preset_q = "What concepts are connected to Machine Learning?"
     with preset_cols[1]:
         if st.button("Explain Gradient Descent & Backpropagation", use_container_width=True):
             preset_q = "Explain the relationship between Gradient Descent and Backpropagation."
     with preset_cols[2]:
-        if st.button("Summarize key concepts in my notes", use_container_width=True):
+        if st.button("Summarize key topics in my notes", use_container_width=True):
             preset_q = "Summarize the primary topics and relationships in my uploaded notes."
 
     # Render Conversation History
-    for msg in st.session_state.chat_history:
-        with st.chat_message(msg["role"]):
-            st.markdown(msg["content"])
-            if "citations" in msg and msg["citations"]:
-                st.markdown("**📍 Verified Sources Cited:**")
-                for cite in msg["citations"]:
-                    st.markdown(f'<span class="citation-tag">📍 {cite["citation"]} ({cite["concept"]})</span>', unsafe_allow_html=True)
+    if not st.session_state.chat_history:
+        st.markdown("""
+        <div class="empty-state">
+            <div style="font-size: 32px;">💬</div>
+            <div class="empty-state-title">Ask Questions Grounded in Your Notes</div>
+            <div class="empty-state-desc">Type any query below or click one of the suggested research questions above. Every answer includes verifiable page citations.</div>
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        for msg in st.session_state.chat_history:
+            with st.chat_message(msg["role"]):
+                if msg["role"] == "assistant":
+                    st.markdown(f'<div class="qa-answer-text">{msg["content"]}</div>', unsafe_allow_html=True)
+                    if "citations" in msg and msg["citations"]:
+                        st.markdown("<div class='citation-box'><strong>📍 Verified Sources Cited:</strong><br>", unsafe_allow_html=True)
+                        for cite in msg["citations"]:
+                            st.markdown(f'<span class="citation-tag">📍 {cite["citation"]} ({cite["concept"]})</span>', unsafe_allow_html=True)
+                        st.markdown("</div>", unsafe_allow_html=True)
+                else:
+                    st.markdown(msg["content"])
 
     # Prompt Input Bar
     user_input = st.chat_input("Ask a question about your knowledge graph...")
@@ -898,11 +982,12 @@ with tab_qa:
                         api_key=st.session_state.api_key,
                         model_name=st.session_state.model_choice
                     )
-                    st.markdown(answer)
+                    st.markdown(f'<div class="qa-answer-text">{answer}</div>', unsafe_allow_html=True)
                     if citations:
-                        st.markdown("**📍 Verified Sources Cited:**")
+                        st.markdown("<div class='citation-box'><strong>📍 Verified Sources Cited:</strong><br>", unsafe_allow_html=True)
                         for cite in citations:
                             st.markdown(f'<span class="citation-tag">📍 {cite["citation"]} ({cite["concept"]})</span>', unsafe_allow_html=True)
+                        st.markdown("</div>", unsafe_allow_html=True)
                     
                     st.session_state.chat_history.append({
                         "role": "assistant",
