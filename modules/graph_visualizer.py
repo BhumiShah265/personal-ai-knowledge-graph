@@ -6,10 +6,10 @@ from typing import Dict, Any
 from config import Config
 
 class GraphVisualizer:
-    """Renders interactive, zoomable, draggable HTML knowledge graphs using PyVis."""
+    """Renders high-grade interactive knowledge graphs using PyVis."""
 
     @classmethod
-    def generate_html(cls, graph_data: Dict[str, Any], height: str = "720px") -> str:
+    def generate_html(cls, graph_data: Dict[str, Any], height: str = "750px") -> str:
         """
         Convert node and edge dictionary lists into a styled PyVis HTML graph visualization
         with rich interactive click-to-view definitions and clean formatted tooltips.
@@ -18,8 +18,8 @@ class GraphVisualizer:
             height=height,
             width="100%",
             directed=True,
-            bgcolor="#F9F9FB",
-            font_color="#0F172A"
+            bgcolor="#FAFAF9",
+            font_color="#18181B"
         )
 
         net.set_options("""
@@ -27,21 +27,21 @@ class GraphVisualizer:
           "nodes": {
             "font": {
               "size": 13,
-              "face": "Plus Jakarta Sans, Inter, system-ui, sans-serif",
-              "color": "#0F172A",
+              "face": "Plus Jakarta Sans, -apple-system, BlinkMacSystemFont, sans-serif",
+              "color": "#18181B",
               "multi": "html",
               "bold": {
-                "color": "#0F172A"
+                "color": "#18181B"
               }
             },
-            "borderWidth": 2,
-            "borderWidthSelected": 3,
+            "borderWidth": 1.5,
+            "borderWidthSelected": 2.5,
             "shapeProperties": {
-              "borderRadius": 8
+              "borderRadius": 6
             },
             "shadow": {
               "enabled": true,
-              "color": "rgba(15, 23, 42, 0.08)",
+              "color": "rgba(24, 24, 27, 0.06)",
               "size": 6,
               "x": 0,
               "y": 2
@@ -51,18 +51,19 @@ class GraphVisualizer:
             "color": {
               "color": "#CBD5E1",
               "highlight": "#7C3AED",
-              "hover": "#7C3AED"
+              "hover": "#7C3AED",
+              "opacity": 0.85
             },
             "font": {
-              "size": 11,
+              "size": 10,
               "align": "middle",
-              "face": "Plus Jakarta Sans, Inter, system-ui, sans-serif",
-              "color": "#64748B",
+              "face": "Plus Jakarta Sans, sans-serif",
+              "color": "#71717A",
               "strokeWidth": 2,
-              "strokeColor": "#F9F9FB"
+              "strokeColor": "#FAFAF9"
             },
             "arrows": {
-              "to": { "enabled": true, "scaleFactor": 0.5 }
+              "to": { "enabled": true, "scaleFactor": 0.45 }
             },
             "smooth": {
               "type": "cubicBezier",
@@ -72,7 +73,7 @@ class GraphVisualizer:
           },
           "interaction": {
             "hover": true,
-            "tooltipDelay": 100,
+            "tooltipDelay": 90,
             "zoomView": true,
             "dragNodes": true,
             "dragView": true,
@@ -84,13 +85,13 @@ class GraphVisualizer:
           "physics": {
             "solver": "forceAtlas2Based",
             "forceAtlas2Based": {
-              "gravitationalConstant": -40,
-              "centralGravity": 0.008,
-              "springLength": 110,
+              "gravitationalConstant": -45,
+              "centralGravity": 0.007,
+              "springLength": 125,
               "springConstant": 0.08,
-              "damping": 0.6
+              "damping": 0.7
             },
-            "maxVelocity": 45,
+            "maxVelocity": 40,
             "minVelocity": 0.1,
             "stabilization": { "iterations": 180 }
           }
@@ -112,8 +113,8 @@ class GraphVisualizer:
             pages_list = ", ".join(n.get("source_pages", [])) or "None"
             desc = n.get("description", "No description available").strip()
             
-            # Clean plain-text tooltip (No raw HTML tags shown)
-            clean_tooltip = f"{n['label']} [{entity_type}]\n\n📖 Definition:\n{desc}\n\n📄 Sources: {docs_list}\n📍 Citations: {pages_list}\n(Click node to view full details)"
+            # Clean plain-text tooltip (No raw HTML tags)
+            clean_tooltip = f"{n['label']} [{entity_type}]\n\n{desc}\n\nSources: {docs_list}\nCitations: {pages_list}"
 
             # Save detailed metadata for JavaScript click handler
             nodes_metadata[n["id"]] = {
@@ -132,11 +133,11 @@ class GraphVisualizer:
                 color={
                     "background": "#FFFFFF",
                     "border": color,
-                    "highlight": {"background": "#F3E8FF", "border": color},
-                    "hover": {"background": "#F8FAFC", "border": color}
+                    "highlight": {"background": "#F5F3FF", "border": "#7C3AED"},
+                    "hover": {"background": "#F4F4F5", "border": color}
                 },
                 shape="box",
-                margin=9,
+                margin=8,
                 group=entity_type
             )
 
@@ -173,22 +174,22 @@ class GraphVisualizer:
         <style>
             #concept-card-overlay {{
                 position: absolute;
-                top: 14px;
-                right: 14px;
+                top: 16px;
+                right: 16px;
                 width: 320px;
                 max-width: 90%;
                 max-height: 85%;
                 overflow-y: auto;
                 background: #FFFFFF;
-                border: 1px solid #E2E8F0;
-                border-left: 4px solid #7C3AED;
-                border-radius: 12px;
+                border: 1px solid #E4E4E7;
+                border-left: 3.5px solid #7C3AED;
+                border-radius: 10px;
                 padding: 16px 18px;
-                box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.1), 0 4px 6px -2px rgba(15, 23, 42, 0.05);
-                font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+                box-shadow: 0 10px 25px -5px rgba(24, 24, 27, 0.08), 0 4px 6px -2px rgba(24, 24, 27, 0.03);
+                font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
                 z-index: 9999;
                 display: none;
-                transition: opacity 0.2s ease;
+                transition: opacity 0.15s ease;
             }}
             #concept-card-overlay .card-header {{
                 display: flex;
@@ -197,20 +198,20 @@ class GraphVisualizer:
                 margin-bottom: 8px;
             }}
             #concept-card-overlay .card-title {{
-                font-size: 16px;
+                font-size: 15px;
                 font-weight: 700;
-                color: #0F172A;
-                line-height: 1.3;
+                color: #18181B;
+                line-height: 1.35;
                 margin: 0;
             }}
             #concept-card-overlay .card-type {{
                 font-size: 10px;
                 font-weight: 700;
-                padding: 3px 7px;
+                padding: 2px 6px;
                 border-radius: 4px;
                 text-transform: uppercase;
                 letter-spacing: 0.4px;
-                background: #F3E8FF;
+                background: #F5F3FF;
                 color: #7C3AED;
                 margin-left: 6px;
                 white-space: nowrap;
@@ -218,29 +219,29 @@ class GraphVisualizer:
             #concept-card-overlay .card-desc {{
                 font-size: 12.5px;
                 line-height: 1.55;
-                color: #334155;
-                background: #F8FAFC;
-                border: 1px solid #E2E8F0;
-                border-radius: 8px;
+                color: #3F3F46;
+                background: #FAFAF9;
+                border: 1px solid #F4F4F5;
+                border-radius: 6px;
                 padding: 10px 12px;
                 margin: 10px 0;
             }}
             #concept-card-overlay .card-meta {{
                 font-size: 11.5px;
-                color: #64748B;
-                border-top: 1px solid #F1F5F9;
+                color: #71717A;
+                border-top: 1px solid #F4F4F5;
                 padding-top: 8px;
                 display: flex;
                 flex-direction: column;
                 gap: 4px;
             }}
             #concept-card-overlay .card-meta strong {{
-                color: #0F172A;
+                color: #18181B;
             }}
             #concept-card-overlay .close-btn {{
                 background: transparent;
                 border: none;
-                color: #94A3B8;
+                color: #A1A1AA;
                 font-size: 16px;
                 font-weight: 700;
                 cursor: pointer;
@@ -248,7 +249,7 @@ class GraphVisualizer:
                 line-height: 1;
             }}
             #concept-card-overlay .close-btn:hover {{
-                color: #0F172A;
+                color: #18181B;
             }}
         </style>
 
@@ -266,8 +267,8 @@ class GraphVisualizer:
                 Definition from document will appear here.
             </div>
             <div class="card-meta">
-                <div><strong>📄 Document:</strong> <span id="card-node-doc">-</span></div>
-                <div><strong>📍 Citation:</strong> <span id="card-node-cite">-</span></div>
+                <div><strong>Document:</strong> <span id="card-node-doc">-</span></div>
+                <div><strong>Citation:</strong> <span id="card-node-cite">-</span></div>
             </div>
         </div>
 
