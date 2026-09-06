@@ -1,0 +1,21 @@
+# Personal Study Notes: Machine Learning & Knowledge Graphs
+
+## Topic 1: Deep Learning Fundamentals
+Neural Networks are computational systems inspired by the biological neural networks in human brains. 
+They consist of layers of interconnected artificial neurons. 
+Gradient Descent is an optimization algorithm used to minimize the loss function of a neural network by iteratively moving in the direction of steepest descent.
+Stochastic Gradient Descent (SGD) and Adam are popular variants of optimization methods.
+Gradient Descent relies on Backpropagation to compute the gradients of the loss function with respect to model weights.
+
+## Topic 2: Modern Transformer Architectures
+The Transformer model was introduced by Vaswani et al. in the paper "Attention Is All You Need".
+Transformers rely on the Self-Attention Mechanism to weigh the importance of different words in a sequence regardless of distance.
+Large Language Models (LLMs) such as GPT-4 and Llama 3 are built upon the Transformer decoder architecture.
+LLMs utilize Retrieval-Augmented Generation (RAG) to ground their answers in external domain knowledge databases, preventing hallucinations.
+
+## Topic 3: Graph Databases & Knowledge Graphs
+Neo4j is an enterprise-grade native graph database management system. 
+It uses the Cypher Query Language to declare complex graph patterns, nodes, and relationships.
+A Knowledge Graph represents real-world entities (nodes) and their semantic connections (edges).
+GraphRAG combines Knowledge Graphs with Vector Indexing to perform structured context retrieval for Large Language Models.
+LlamaIndex provides robust data framework tools for connecting custom data sources to LLM applications and constructing knowledge graphs.
